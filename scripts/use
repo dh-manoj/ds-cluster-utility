@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+country_code=$1
+ds-cluster-list | grep "|${country_code}|" | awk -F'|' '{print $7}' | xargs kubectl config use-context
+

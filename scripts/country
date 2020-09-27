@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+ds-cluster-list |  awk -F'|' '{printf("%s|%s|%s|%s\n",$1, $2, $3, $8)}'
+

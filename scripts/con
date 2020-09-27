@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+
+country_code=$1
+with_replica=$2
+
+
+function connect {
+    script_path='~'
+
+    DB_INSTANCE=$1
+
+    echo "[INFO] Connecting to ${DB_INSTANCE}"
+
+    pids=()
+
+    cloud_sql_proxy -instances=${DB_INSTANCE} & pids+=($!);
+
+    # trap ctrl-c and call ctrl_c()
+    trap ctrl_c INT
+
+    function ctrl_c() {
+        echo "** Trapped CTRL-C"
+        for pid in "${pids[@]}"; do
+            echo "killing pid:${pid}";
+            kill -9 ${pid};
+        done
+    }
+
+    for pid in "${pids[@]}"; do
+        wait ${pid};
+        echo "${pid} is terminated";
+    done
+
+    echo "process terminated";
+}
+
+if [ "$with_replica" = "r" ]; then
+    connect $(ds-cluster-list | grep "|${country_code}|"| awk -F'|' '{printf("%s-replica=tcp:%s", $9, $8)}')
+else
+    echo "[WARNING] ***** You are connecting to the MASTER database. *****";
+    connect $(ds-cluster-list | grep "|${country_code}|"| awk -F'|' '{printf("%s=tcp:%s", $9, $8)}')
+fi
+
