@@ -6,6 +6,8 @@ Utilities to help with darkstores cluster in multiple countries.
 - **use <country_code>**: switch cluster context using country code
 - **con <country_code>**: connect database using country code
 - **country**: list all the countries and details such as port assigned to them (port number will remain constant)
+- **backup-db <country_code> <file_name>**: backup demand-planner database from prod
+- **restore-db <country_code> <file_name>**: restore database file in local db(will ask password 2 times. You should use demand_planner)
 
 ## Prerequiste:
 - go compiler

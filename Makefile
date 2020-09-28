@@ -5,3 +5,6 @@ install:
 	cp ./scripts/use /usr/local/bin/
 	cp ./scripts/con /usr/local/bin/
 	cp ./scripts/country /usr/local/bin/
+	cp ./scripts/backup-db /usr/local/bin/
+	cp ./scripts/restore-db /usr/local/bin/
+
