@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+
+cc=$1
+file_name=$2
+
+
+if [ "$cc" = "" ]; then
+    echo "[Error] No country code supplied"
+    exit 1
+fi
+
+if [ "$file_name" = "" ]; then
+    file_name=${cc}-dp-snapshot.dump
+fi
+
+
+if use $cc; then
+    port=$(ds-cluster-list| grep "|${cc}|"| awk -F'|' '{print $8}')
+
+    echo "Backup file name:${file_name} from ${cc} port:${}"
+
+    DSN=$(kubectl get secret demand-planner-db-uri-secret -o json | jq .data'["demand-planner-db-uri"]' -r | base64 -d | sed "s/cloudsql-proxy-gcloud-sqlproxy:5432/localhost:${port}/")
+
+    echo "Backup $cc demand-planner database - starting"
+    pg_dump "$DSN" > ./$file_name
+    echo "Backup - done"
+else
+    echo "$cc - country_code not found"
+    exit 1
+fi
+
+
+

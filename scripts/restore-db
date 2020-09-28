@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+cc=$1
+file_name=$2
+
+if [ "$cc" = "" ]; then
+    echo "[Error] No country code supplied"
+    exit 1
+fi
+
+if [ "$file_name" = "" ]; then
+    echo "[Error] No file name supplied"
+    exit 1
+fi
+
+#disconnect all connection - drop and create demand-planner database
+echo "select pg_terminate_backend(pg_stat_activity.pid) from pg_stat_activity where pg_stat_activity.datname = 'demand-planner' and pid <> pg_backend_pid(); drop database \"demand-planner\"; create user \"demand-planner\" with password 'demand_planner'; create database \"demand-planner\" owner \"demand-planner\";"\
+    | psql -U postgres -W -h 127.0.0.1 --port 54399;
+echo "local demand-planner database dropped"
+
+echo "Restore database - start"
+psql -h 127.0.0.1 --port 54399 -U demand-planner < ./$file_name
+echo "Restore database - done"
