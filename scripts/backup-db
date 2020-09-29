@@ -17,7 +17,7 @@ fi
 if use $cc; then
     port=$(ds-cluster-list| grep "|${cc}|"| awk -F'|' '{print $8}')
 
-    echo "Backup file name:${file_name} from ${cc} port:${}"
+    echo "Backup file name:${file_name} from ${cc} port:${port}"
 
     DSN=$(kubectl get secret demand-planner-db-uri-secret -o json | jq .data'["demand-planner-db-uri"]' -r | base64 -d | sed "s/cloudsql-proxy-gcloud-sqlproxy:5432/localhost:${port}/")
 
