@@ -326,6 +326,7 @@ func extractInfraInfo(env, filePath string) (string, string, string, string) {
 	region := ""
 	zone := ""
 	clusterName := ""
+	version := 1
 	for scanner.Scan() {
 		if isCodeFound && isRegionFound && isZoneFound && isClusterNameFound {
 			break
@@ -347,8 +348,13 @@ func extractInfraInfo(env, filePath string) (string, string, string, string) {
 			}
 			isZoneFound = true
 		} else if !isClusterNameFound && rxClusterName.MatchString(scanner.Text()) {
-			clusterName = extractValueWithinDoubleQuotes(scanner.Text())
-			isClusterNameFound = true
+			if code == "qat" && version == 1 {
+				//skip version 1 cluster name
+				version = 2
+			} else {
+				clusterName = extractValueWithinDoubleQuotes(scanner.Text())
+				isClusterNameFound = true
+			}
 		}
 	}
 
