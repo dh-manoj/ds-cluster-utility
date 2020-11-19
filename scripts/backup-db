@@ -19,7 +19,7 @@ if use $cc; then
 
     echo "Backup file name:${file_name} from ${cc} port:${port}"
 
-    DSN=$(kubectl get secret -n demand-planner demand-planner-db-uri-secret -o json | jq .data'["demand-planner-db-uri"]' -r | base64 -d | sed "s/cloudsql-proxy-gcloud-sqlproxy:5432/localhost:${port}/")
+    DSN=$(kubectl get secret -n demand-planner demand-planner-db-uri-secret -o json | jq .data'["demand-planner-db-uri"]' -r | base64 -d | sed "s/cloudsql-proxy-gcloud-sqlproxy.default.svc.cluster.local:5432/localhost:${port}/")
 
     echo "Backup $cc demand-planner database - starting"
     pg_dump "$DSN" > ./$file_name

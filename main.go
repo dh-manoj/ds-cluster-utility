@@ -339,12 +339,14 @@ func extractInfraInfo(env, filePath string) (string, string, string, string) {
 		} else if !isZoneFound && rxZone.MatchString(scanner.Text()) {
 			zone = extractValueWithinDoubleQuotes(scanner.Text())
 			//hacky code - because of different zone name confusion in cluster-xx.tf file
-			if zone == "us-east4-b" {
+			if zone == "us-east4-b" && strings.Contains(filePath, "cluster-arg") {
 				zone = "us-east4-c" //argentina
 			} else if zone == "europe-west1-d" && strings.Contains(filePath, "cluster-ae") {
 				zone = "europe-west1-b"
 			} else if zone == "europe-west1-d" && strings.Contains(filePath, "cluster-sa") {
 				zone = "europe-west1-c"
+			} else if zone == "us-east4-c" && strings.Contains(filePath, "cluster-cl") {
+				zone = "us-east4-b"
 			}
 			isZoneFound = true
 		} else if !isClusterNameFound && rxClusterName.MatchString(scanner.Text()) {
