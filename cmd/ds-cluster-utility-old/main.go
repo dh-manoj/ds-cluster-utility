@@ -376,8 +376,6 @@ func extractInfraInfo(env, filePath string) (string, string, string, string) {
 	return code, region, zone, clusterName
 }
 
-var rxVar = regexp.MustCompile("\\$\\{(.*?)\\}")
-
 func formClusterName(clusterNameTemplate, code, region, zone string) string {
 	tempCode := code
 	if tempCode == "qat" {
