@@ -58,8 +58,7 @@ var regExValueWithinDoubleQuotes = regexp.MustCompile("\"(.*?)\"")
 func valueWithinDoubleQuotes(value string) string {
 	match := regExValueWithinDoubleQuotes.FindStringSubmatch(value)
 	if len(match) == 0 {
-		fmt.Printf("[warning] failed to find match in value:`%s`\n", value)
-		return ""
+		return "**NotFound**"
 	}
 	return match[1]
 }
@@ -109,7 +108,6 @@ func (ip *InfraParser) ParseClusterFile(cl *cluster.Cluster) {
 		if isCodeFound && isRegionFound && isZoneFound && isClusterNameFound && isClusterZoneFound {
 			break
 		} else if !isCodeFound && rxCode.MatchString(scanner.Text()) {
-			fmt.Printf(scanner.Text())
 			code = valueWithinDoubleQuotes(scanner.Text())
 			isCodeFound = true
 		} else if !isRegionFound && rxRegion.MatchString(scanner.Text()) {
